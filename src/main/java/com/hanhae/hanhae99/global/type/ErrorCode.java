@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     //Password
     NO_PASSWORD(HttpStatus.UNAUTHORIZED, "패스워드가 맞지 않습니다."),
+    NO_PID(HttpStatus.BAD_REQUEST, "잘못된 게시글 정보입니다.")
 
     ;
 

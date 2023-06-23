@@ -44,13 +44,17 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardResponse findById(Long id) {
-        Board board = repository.findById(id).orElseThrow();
+        Board board = repository.findById(id).orElseThrow(()->
+                new CustomException(ErrorCode.NO_PID)
+        );
         return changeEntity(board);
     }
 
     @Transactional
     public BoardResponse updateBoard(Long id, BoardSaveRequest req){
-        Board board = repository.findById(id).orElseThrow();
+        Board board = repository.findById(id).orElseThrow(()->
+                new CustomException(ErrorCode.NO_PID)
+        );
         if(!(board.getPassword().equals(req.password()))){
             //TODO 에러
             throw new CustomException(ErrorCode.NO_PASSWORD);
@@ -62,7 +66,9 @@ public class BoardService {
     }
 
     public String deleteBoard(Long id, String password){
-        Board board = repository.findById(id).orElseThrow();
+        Board board = repository.findById(id).orElseThrow(()->
+                new CustomException(ErrorCode.NO_PID)
+        );
         if(!(board.getPassword().equals(password))){
             //TODO 에러
             throw new CustomException(ErrorCode.NO_PASSWORD);
