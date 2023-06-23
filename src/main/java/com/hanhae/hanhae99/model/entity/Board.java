@@ -1,5 +1,6 @@
 package com.hanhae.hanhae99.model.entity;
 
+import com.hanhae.hanhae99.model.response.BoardResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,12 @@ public class Board extends AuditingFields {
     @Column
     private String password;
 
-
+    public static BoardResponse changeEntity(Board board) {
+        return new BoardResponse(board.getTitle(),
+                board.getName(),
+                board.getContent(),
+                board.getCreatedAt().toString()
+        );
+    }
 
 }
