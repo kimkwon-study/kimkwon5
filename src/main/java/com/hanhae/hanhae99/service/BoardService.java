@@ -31,13 +31,13 @@ public class BoardService {
                 .content(req.content())
                 .password(req.password())
                 .build());
-        return changeEntity(board);
+        return Board.changeEntity(board);
     }
 
     @Transactional(readOnly = true)
     public List<BoardResponse> findAll() {
         return repository.findAll().stream()
-                .map(a -> changeEntity(a))
+                .map(a -> Board.changeEntity(a))
                 .sorted(Comparator.comparing(BoardResponse::createdAt).reversed())
                 .collect(Collectors.toList());
     }
@@ -47,7 +47,7 @@ public class BoardService {
         Board board = repository.findById(id).orElseThrow(()->
                 new CustomException(ErrorCode.NO_PID)
         );
-        return changeEntity(board);
+        return Board.changeEntity(board);
     }
 
     @Transactional
@@ -62,7 +62,7 @@ public class BoardService {
         board.setName(req.name());
         board.setTitle(req.title());
         board.setContent(req.content());
-        return changeEntity(board);
+        return Board.changeEntity(board);
     }
 
     public String deleteBoard(Long id, String password){
@@ -77,14 +77,5 @@ public class BoardService {
         return "성공적으로 삭제되었습니다.";
     }
 
-
-    public BoardResponse changeEntity(Board board) {
-
-        return new BoardResponse(board.getTitle(),
-                board.getName(),
-                board.getContent(),
-                board.getCreatedAt().toString()
-        );
-    }
 
 }
