@@ -1,4 +1,4 @@
-package com.hanhae.hanhae99.global.response;
+package com.hanhae.hanhae99.global.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

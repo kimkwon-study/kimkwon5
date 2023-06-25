@@ -1,4 +1,4 @@
-package com.hanhae.hanhae99.model.response;
+package com.hanhae.hanhae99.board.model.response;
 
 public record BoardResponse(
         String title,

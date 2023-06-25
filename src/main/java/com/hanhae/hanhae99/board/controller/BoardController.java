@@ -1,9 +1,9 @@
-package com.hanhae.hanhae99.controller;
+package com.hanhae.hanhae99.board.controller;
 
-import com.hanhae.hanhae99.global.response.JsonResponse;
-import com.hanhae.hanhae99.model.request.BoardSaveRequest;
-import com.hanhae.hanhae99.model.response.BoardResponse;
-import com.hanhae.hanhae99.service.BoardService;
+import com.hanhae.hanhae99.board.service.BoardService;
+import com.hanhae.hanhae99.global.model.response.JsonResponse;
+import com.hanhae.hanhae99.board.model.request.BoardSaveRequest;
+import com.hanhae.hanhae99.board.model.response.BoardResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

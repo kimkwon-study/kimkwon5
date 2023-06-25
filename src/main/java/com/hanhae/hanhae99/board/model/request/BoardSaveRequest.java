@@ -1,4 +1,4 @@
-package com.hanhae.hanhae99.model.request;
+package com.hanhae.hanhae99.board.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

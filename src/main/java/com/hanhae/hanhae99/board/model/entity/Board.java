@@ -1,6 +1,6 @@
-package com.hanhae.hanhae99.model.entity;
+package com.hanhae.hanhae99.board.model.entity;
 
-import com.hanhae.hanhae99.model.response.BoardResponse;
+import com.hanhae.hanhae99.board.model.response.BoardResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
