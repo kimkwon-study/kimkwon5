@@ -1,9 +1,10 @@
 package com.hanhae.hanhae99.service;
 
-import com.hanhae.hanhae99.model.entity.Board;
-import com.hanhae.hanhae99.model.request.BoardSaveRequest;
-import com.hanhae.hanhae99.model.response.BoardResponse;
-import com.hanhae.hanhae99.repository.BoardRepository;
+import com.hanhae.hanhae99.board.model.entity.Board;
+import com.hanhae.hanhae99.board.model.request.BoardSaveRequest;
+import com.hanhae.hanhae99.board.model.response.BoardResponse;
+import com.hanhae.hanhae99.board.repository.BoardRepository;
+import com.hanhae.hanhae99.board.service.BoardService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

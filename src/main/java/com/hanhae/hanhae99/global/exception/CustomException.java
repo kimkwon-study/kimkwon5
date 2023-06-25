@@ -1,6 +1,6 @@
 package com.hanhae.hanhae99.global.exception;
 
-import com.hanhae.hanhae99.global.type.ErrorCode;
+import com.hanhae.hanhae99.global.model.type.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
