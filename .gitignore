@@ -216,4 +216,5 @@ $RECYCLE.BIN/
 # application.yaml
 src/main/resources/application.yaml
 
+
 # End of https://www.toptal.com/developers/gitignore/api/java,windows,intellij,database
