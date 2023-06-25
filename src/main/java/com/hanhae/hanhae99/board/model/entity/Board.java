@@ -26,8 +26,6 @@ public class Board extends AuditingFields {
     @Column
     private String content;
 
-    @Column
-    private String password;
 
     public static BoardResponse changeEntity(Board board) {
         return new BoardResponse(board.getTitle(),

@@ -26,7 +26,7 @@ public class LoginService {
                 .orElseThrow(() -> {
                     throw new CustomException(ErrorCode.LOGIN_NO);
                 });
-        String token = jwtUtil.createToken(request.id(), user.getRole()); //토큰 생성
+        String token = jwtUtil.createToken(user.getUsername(), user.getRole()); //토큰 생성
         jwtUtil.addJwtToCookie(token, response); //쿠키 설정
 
         return "로그인 성공!!";

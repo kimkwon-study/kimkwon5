@@ -6,6 +6,8 @@ import com.hanhae.hanhae99.board.model.entity.Board;
 import com.hanhae.hanhae99.board.model.request.BoardSaveRequest;
 import com.hanhae.hanhae99.board.model.response.BoardResponse;
 import com.hanhae.hanhae99.board.repository.BoardRepository;
+import com.hanhae.hanhae99.global.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,23 +21,23 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository repository;
+    private final JwtUtil jwtUtil;
 
     @Transactional
-    public BoardResponse save(BoardSaveRequest req) {
+    public BoardResponse save(BoardSaveRequest boarReq, HttpServletRequest request) {
+
         Board board = repository.save(Board.builder()
-                .title(req.title())
-                .name(req.name())
-                .content(req.content())
-                .password(req.password())
+                .title(boarReq.title())
+                .name(getTokenToUserName(request))
+                .content(boarReq.content())
                 .build());
         return Board.changeEntity(board);
     }
 
     @Transactional(readOnly = true)
     public List<BoardResponse> findAll() {
-        return repository.findAll().stream()
+        return repository.findAllByOrderByCreatedAtDesc().stream()
                 .map(a -> Board.changeEntity(a))
-                .sorted(Comparator.comparing(BoardResponse::createdAt).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -48,30 +50,37 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponse updateBoard(Long id, BoardSaveRequest req){
+    public BoardResponse updateBoard(Long id, BoardSaveRequest req, HttpServletRequest servletRequest){
         Board board = repository.findById(id).orElseThrow(()->
                 new CustomException(ErrorCode.NO_PID)
         );
-        if(!(board.getPassword().equals(req.password()))){
+        if(!(board.getName().equals(getTokenToUserName(servletRequest)))){
             //TODO 에러
             throw new CustomException(ErrorCode.NO_PASSWORD);
         }
-        board.setName(req.name());
         board.setTitle(req.title());
         board.setContent(req.content());
         return Board.changeEntity(board);
     }
 
-    public String deleteBoard(Long id, String password){
+    public String deleteBoard(Long id, HttpServletRequest req){
         Board board = repository.findById(id).orElseThrow(()->
                 new CustomException(ErrorCode.NO_PID)
         );
-        if(!(board.getPassword().equals(password))){
+        if(!(board.getName().equals(getTokenToUserName(req)))){
             //TODO 에러
             throw new CustomException(ErrorCode.NO_PASSWORD);
         }
         repository.deleteById(id);
         return "성공적으로 삭제되었습니다.";
+    }
+
+    public String getTokenToUserName(HttpServletRequest req){
+        String token = jwtUtil.getTokenFromRequest(req);
+        String userName = jwtUtil.getUserInfoFromToken(
+                jwtUtil.substringToken(token)
+        ).get("sub").toString();
+        return userName;
     }
 
 

@@ -1,6 +1,8 @@
 package com.hanhae.hanhae99.global.util;
 
 import com.hanhae.hanhae99.certification.model.type.UserRoleEnum;
+import com.hanhae.hanhae99.global.exception.CustomException;
+import com.hanhae.hanhae99.global.model.type.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -78,8 +80,7 @@ public class JwtUtil {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
-        log.error("Not Found Token");
-        throw new NullPointerException("Not Found Token");
+        throw new CustomException(ErrorCode.WRONG_TOKEN);
     }
 
     // 토큰 검증

@@ -11,15 +11,6 @@ public record BoardSaveRequest(
         @NotEmpty
         String title,
 
-        @NotNull
-        @NotBlank
-        @NotEmpty
-        String name,
-
-        @NotNull
-        @NotBlank
-        @NotEmpty
-        String password,
 
         @NotNull
         @NotBlank
