@@ -1,6 +1,7 @@
 package com.hanhae.hanhae99.board.model.entity;
 
 import com.hanhae.hanhae99.board.model.response.BoardResponse;
+import com.hanhae.hanhae99.global.model.entity.AuditingFields;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,6 +1,6 @@
 package com.hanhae.hanhae99.certification.model.entity;
 
-import com.hanhae.hanhae99.board.model.entity.AuditingFields;
+import com.hanhae.hanhae99.global.model.entity.AuditingFields;
 import com.hanhae.hanhae99.certification.model.type.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

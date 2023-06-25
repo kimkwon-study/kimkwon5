@@ -1,4 +1,4 @@
-package com.hanhae.hanhae99.board.model.entity;
+package com.hanhae.hanhae99.global.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
