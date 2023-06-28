@@ -1,5 +1,6 @@
 package com.hanhae.hanhae99.board.service;
 
+import com.hanhae.hanhae99.certification.model.type.UserRoleEnum;
 import com.hanhae.hanhae99.global.exception.CustomException;
 import com.hanhae.hanhae99.global.model.type.ErrorCode;
 import com.hanhae.hanhae99.board.model.entity.Board;
@@ -54,24 +55,39 @@ public class BoardService {
         Board board = repository.findById(id).orElseThrow(()->
                 new CustomException(ErrorCode.NO_PID)
         );
-        if(!(board.getName().equals(getTokenToUserName(servletRequest)))){
-            //TODO 에러
-            throw new CustomException(ErrorCode.NO_PASSWORD);
+
+        if(UserRoleEnum.ADMIN.equals(getTokenToRole(servletRequest))){
+            board.setTitle(req.title());
+            board.setContent(req.content());
+        }else{
+            if(!(board.getName().equals(getTokenToUserName(servletRequest)))){
+                //TODO 에러
+                throw new CustomException(ErrorCode.NO_PASSWORD);
+            }else {
+                board.setTitle(req.title());
+                board.setContent(req.content());
+            }
         }
-        board.setTitle(req.title());
-        board.setContent(req.content());
+
         return Board.changeEntity(board);
+
     }
 
     public String deleteBoard(Long id, HttpServletRequest req){
         Board board = repository.findById(id).orElseThrow(()->
                 new CustomException(ErrorCode.NO_PID)
         );
-        if(!(board.getName().equals(getTokenToUserName(req)))){
-            //TODO 에러
-            throw new CustomException(ErrorCode.NO_PASSWORD);
+
+        if(UserRoleEnum.ADMIN.equals(getTokenToRole(req))){
+            repository.deleteById(id);
+        }else{
+            if(!(board.getName().equals(getTokenToUserName(req)))){
+                //TODO 에러
+                throw new CustomException(ErrorCode.NO_PASSWORD);
+            }else {
+                repository.deleteById(id);
+            }
         }
-        repository.deleteById(id);
         return "성공적으로 삭제되었습니다.";
     }
 
@@ -81,6 +97,14 @@ public class BoardService {
                 jwtUtil.substringToken(token)
         ).get("sub").toString();
         return userName;
+    }
+
+    public String getTokenToRole(HttpServletRequest req){
+        String token = jwtUtil.getTokenFromRequest(req);
+        String authority = jwtUtil.getUserInfoFromToken(
+                jwtUtil.substringToken(token)
+        ).get(jwtUtil.AUTHORIZATION_KEY).toString();
+        return authority;
     }
 
 
