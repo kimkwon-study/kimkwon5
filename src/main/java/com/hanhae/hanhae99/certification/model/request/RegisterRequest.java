@@ -14,7 +14,7 @@ public record RegisterRequest(
         String id,
         @Size(min = 8, max = 15)
         @NotNull
-        @Pattern(regexp = "^[a-zA-Z0-9]+$")
+        @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).*$")
         @NotBlank
         String pw,
         @NotNull
