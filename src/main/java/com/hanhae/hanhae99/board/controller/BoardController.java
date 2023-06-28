@@ -21,7 +21,6 @@ public class BoardController {
 
     private final BoardService service;
 
-
     @GetMapping("/findall")
     public JsonResponse<List<BoardResponse>> findall() {
         List<BoardResponse> responseList = service.findAll();
