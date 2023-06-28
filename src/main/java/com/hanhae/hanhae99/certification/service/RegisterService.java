@@ -27,6 +27,20 @@ public class RegisterService {
             throw new CustomException(ErrorCode.NAME_SAME);
         }
 
+        //TODO: 임시 테스트
+        if(request.id().equals("admin") && request.pw().equals("adminpass")){
+
+            repository.save(
+                    User.builder()
+                            .userId(request.id())
+                            .userPw(request.pw())
+                            .username(request.name())
+                            .role(UserRoleEnum.ADMIN)
+                            .build()
+            );
+            return "성공!";
+        }
+
         repository.save(
                 User.builder()
                         .userId(request.id())
