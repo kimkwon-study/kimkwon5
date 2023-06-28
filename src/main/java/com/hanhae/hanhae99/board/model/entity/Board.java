@@ -5,6 +5,7 @@ import com.hanhae.hanhae99.global.model.entity.AuditingFields;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ToString
@@ -28,15 +29,15 @@ public class Board extends AuditingFields {
     @Column
     private String content;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "boardPid")
-    private List<Board> board;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board")
+    private List<Comment> comments = new ArrayList<>();
 
     public static BoardResponse changeEntity(Board board) {
         return new BoardResponse(board.getTitle(),
                 board.getName(),
                 board.getContent(),
-                board.getCreatedAt().toString()
+                board.getCreatedAt().toString(),
+                board.getComments()
         );
     }
 

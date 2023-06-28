@@ -32,6 +32,7 @@ public class BoardService {
                 .name(getTokenToUserName(request))
                 .content(boarReq.content())
                 .build());
+        System.out.println(board.getComments());
         return Board.changeEntity(board);
     }
 
@@ -47,6 +48,7 @@ public class BoardService {
         Board board = repository.findById(id).orElseThrow(()->
                 new CustomException(ErrorCode.NO_PID)
         );
+        System.out.println(board.getComments());
         return Board.changeEntity(board);
     }
 

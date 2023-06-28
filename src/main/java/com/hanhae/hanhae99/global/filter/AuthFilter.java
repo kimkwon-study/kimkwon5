@@ -66,6 +66,7 @@ public class AuthFilter implements Filter {
         String error = errorMsg;
         writer.print(error);
         writer.flush();
+
         log.error(errorMsg);
     }
 
