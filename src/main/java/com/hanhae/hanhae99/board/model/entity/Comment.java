@@ -1,5 +1,6 @@
 package com.hanhae.hanhae99.board.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hanhae.hanhae99.board.model.request.CommentRequest;
 import com.hanhae.hanhae99.global.model.entity.AuditingFields;
 import jakarta.persistence.*;
@@ -23,6 +24,7 @@ public class Comment extends AuditingFields {
     @Column
     private String content;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_pid")
     private Board board;
