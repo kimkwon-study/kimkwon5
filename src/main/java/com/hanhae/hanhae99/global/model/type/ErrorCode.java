@@ -16,7 +16,12 @@ public enum ErrorCode {
     NAME_SAME(HttpStatus.UNAUTHORIZED, "중복되는 닉네임 입니다."),
 
     //Token
-    WRONG_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰값 입니다.")
+    WRONG_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰값 입니다."),
+
+    //댓글
+    WRONG_BOARD_PID(HttpStatus.NOT_FOUND, "잘못된 게시글 접근 입니다."),
+    WRONG_COMMENT_PID(HttpStatus.NOT_FOUND, "잘못된 댓글 접근 입니다."),
+    WRONG_NAME(HttpStatus.NOT_FOUND, "사용자가 작성한 댓글이 아닙니다.")
     ;
 
     private final HttpStatus status;
