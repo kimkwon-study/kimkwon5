@@ -29,7 +29,7 @@ public class Board extends AuditingFields {
     @Column
     private String content;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board")
+    @OneToMany( mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     public static BoardResponse changeEntity(Board board) {
