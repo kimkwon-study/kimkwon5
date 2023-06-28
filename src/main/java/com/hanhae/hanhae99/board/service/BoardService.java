@@ -55,8 +55,8 @@ public class BoardService {
         Board board = repository.findById(id).orElseThrow(()->
                 new CustomException(ErrorCode.NO_PID)
         );
-
-        if(UserRoleEnum.ADMIN.equals(getTokenToRole(servletRequest))){
+        System.out.println(getTokenToRole(servletRequest));
+        if(UserRoleEnum.ADMIN.toString().equals(getTokenToRole(servletRequest))){
             board.setTitle(req.title());
             board.setContent(req.content());
         }else{
@@ -78,7 +78,7 @@ public class BoardService {
                 new CustomException(ErrorCode.NO_PID)
         );
 
-        if(UserRoleEnum.ADMIN.equals(getTokenToRole(req))){
+        if(UserRoleEnum.ADMIN.toString().equals(getTokenToRole(req))){
             repository.deleteById(id);
         }else{
             if(!(board.getName().equals(getTokenToUserName(req)))){
