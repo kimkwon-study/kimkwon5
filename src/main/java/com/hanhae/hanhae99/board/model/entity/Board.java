@@ -43,12 +43,19 @@ public class Board extends AuditingFields {
 
     public static BoardResponse changeEntity(Board board) {
 
+        long board_size = 0 ;
+        if(board.getBoardHearts()==null){
+            board_size=0;
+        }else{
+            board_size = board.getBoardHearts().size();
+        }
+
         if(Objects.isNull(board.getComments())){
             return new BoardResponse(board.getTitle(),
                     board.getName(),
                     board.getContent(),
                     board.getCreatedAt().toString(),
-                    0,
+                    board_size,
                     new ArrayList<>()
             );
         }else{
@@ -68,6 +75,23 @@ public class Board extends AuditingFields {
         }
 
     }
+
+//    public static BoardResponse changeEntity(Board board) {
+//
+//        return new BoardResponse(board.getTitle(),
+//                board.getName(),
+//                board.getContent(),
+//                board.getCreatedAt().toString(),
+//                board_size,
+//                board.getComments().stream().map(a -> {
+//                    return new CommentResponse(
+//                            a.getName(),
+//                            a.getContent(),
+//                            a.getCommentHearts().size()
+//                    );
+//                }).collect(Collectors.toList())
+//        );
+//    }
 
 
 }
