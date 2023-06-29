@@ -11,22 +11,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Slf4j(topic = "로그인 및 JWT 생성")
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
 
-//    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
-//        setFilterProcessesUrl("/api/user/login");
-//    }
+    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+        setFilterProcessesUrl("/login");
+    }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -55,11 +57,33 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = jwtUtil.createToken(username, role);
         jwtUtil.addJwtToCookie(token, response);
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+
+        String json = "{\"success\": \"로그인이 완료 되었습니다.\"}";
+
+        // JSON 응답 전송
+        PrintWriter writer = response.getWriter();
+        writer.print(json);
+        writer.flush();
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         log.info("로그인 실패");
-        response.setStatus(401);
+
+        response.setStatus(400);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+
+        String json = "{\"fail\": \"로그인에 실패하였습니다.\"}";
+
+        // JSON 응답 전송
+        PrintWriter writer = response.getWriter();
+        writer.print(json);
+        writer.flush();
     }
+
 }

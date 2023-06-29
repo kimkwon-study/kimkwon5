@@ -1,5 +1,6 @@
 package com.hanhae.hanhae99.board.service;
 
+import com.hanhae.hanhae99.certification.model.entity.User;
 import com.hanhae.hanhae99.certification.model.type.UserRoleEnum;
 import com.hanhae.hanhae99.global.exception.CustomException;
 import com.hanhae.hanhae99.global.model.type.ErrorCode;
@@ -23,14 +24,13 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository repository;
-    private final JwtUtil jwtUtil;
 
     @Transactional
-    public BoardResponse save(BoardSaveRequest boarReq, HttpServletRequest request) {
+    public BoardResponse save(BoardSaveRequest boarReq, User user) {
 
         Board board = repository.save(Board.builder()
                 .title(boarReq.title())
-                .name(jwtUtil.getTokenToUserName(request))
+                .name(user.getUsername())
                 .content(boarReq.content())
                 .build());
         return Board.changeEntity(board);
@@ -52,47 +52,44 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponse updateBoard(Long id, BoardSaveRequest req, HttpServletRequest servletRequest) {
+    public BoardResponse updateBoard(Long id, BoardSaveRequest req, User user) {
+
         Board board = repository.findById(id).orElseThrow(() ->
                 new CustomException(ErrorCode.NO_PID)
         );
 
-        if (UserRoleEnum.ADMIN.toString().equals(jwtUtil.getTokenToRole(servletRequest))) {
+        if (checkIf(user, board)) {
             board.setTitle(req.title());
             board.setContent(req.content());
-        } else {
-            if (!(board.getName().equals(jwtUtil.getTokenToUserName(servletRequest)))) {
-                //TODO 에러
-                throw new CustomException(ErrorCode.NO_PASSWORD);
-            } else {
-                board.setTitle(req.title());
-                board.setContent(req.content());
-            }
         }
 
         return Board.changeEntity(board);
 
     }
 
-    public String deleteBoard(Long id, HttpServletRequest req) {
+    public String deleteBoard(Long id,  User user) {
         Board board = repository.findById(id).orElseThrow(() ->
                 new CustomException(ErrorCode.NO_PID)
         );
 
-        if (UserRoleEnum.ADMIN.toString().equals(jwtUtil.getTokenToRole(req))) {
+        if (checkIf(user, board)) {
             repository.deleteById(id);
-        } else {
-            if (!(board.getName().equals(jwtUtil.getTokenToUserName(req)))) {
-                //TODO 에러
-                throw new CustomException(ErrorCode.NO_PASSWORD);
-            } else {
-                repository.deleteById(id);
-            }
         }
+
         return "성공적으로 삭제되었습니다.";
     }
 
-
+    public boolean checkIf(User user, Board board) {
+        if (UserRoleEnum.ADMIN.toString().equals(user.getRole().getRole())) {
+            return true;
+        } else {
+            if (!(board.getName().equals(user.getUsername()))) {
+                //TODO 에러
+                throw new CustomException(ErrorCode.NO_PASSWORD);
+            }
+        }
+        return true;
+    }
 
 
 }

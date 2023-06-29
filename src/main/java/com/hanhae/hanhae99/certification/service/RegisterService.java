@@ -1,5 +1,6 @@
 package com.hanhae.hanhae99.certification.service;
 
+import com.hanhae.hanhae99.certification.config.PasswordConfig;
 import com.hanhae.hanhae99.certification.model.entity.User;
 import com.hanhae.hanhae99.certification.model.request.RegisterRequest;
 import com.hanhae.hanhae99.certification.model.type.UserRoleEnum;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class RegisterService {
 
     private final UserRepository repository;
+    private final PasswordConfig passwordEncoder;
 
     @Transactional
     public String register(RegisterRequest request) {
@@ -33,7 +35,7 @@ public class RegisterService {
             repository.save(
                     User.builder()
                             .userId(request.id())
-                            .userPw(request.pw())
+                            .userPw(passwordEncoder.passwordEncoder().encode(request.pw()))
                             .username(request.name())
                             .role(UserRoleEnum.ADMIN)
                             .build()
@@ -44,7 +46,7 @@ public class RegisterService {
         repository.save(
                 User.builder()
                         .userId(request.id())
-                        .userPw(request.pw())
+                        .userPw(passwordEncoder.passwordEncoder().encode(request.pw()))
                         .username(request.name())
                         .role(UserRoleEnum.USER)
                         .build()

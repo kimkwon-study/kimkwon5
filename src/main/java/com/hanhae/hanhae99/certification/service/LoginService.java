@@ -1,5 +1,6 @@
 package com.hanhae.hanhae99.certification.service;
 
+import com.hanhae.hanhae99.certification.model.UserDetailsImpl;
 import com.hanhae.hanhae99.certification.model.entity.User;
 import com.hanhae.hanhae99.certification.model.request.LoginRequest;
 import com.hanhae.hanhae99.certification.model.type.UserRoleEnum;
@@ -37,7 +38,12 @@ public class LoginService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        System.out.println(username);
+        User user = repository.findByUserId(username)
+                .orElseThrow(() -> {
+                    throw new UsernameNotFoundException("유저를 찾을수 없음");
+                });
+        return new UserDetailsImpl(user);
     }
 
 }

@@ -3,11 +3,9 @@ package com.hanhae.hanhae99.certification.model.entity;
 import com.hanhae.hanhae99.global.model.entity.AuditingFields;
 import com.hanhae.hanhae99.certification.model.type.UserRoleEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

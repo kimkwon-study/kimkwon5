@@ -1,6 +1,7 @@
 package com.hanhae.hanhae99.board.controller;
 
 import com.hanhae.hanhae99.board.service.BoardService;
+import com.hanhae.hanhae99.certification.model.UserDetailsImpl;
 import com.hanhae.hanhae99.global.model.response.JsonResponse;
 import com.hanhae.hanhae99.board.model.request.BoardSaveRequest;
 import com.hanhae.hanhae99.board.model.response.BoardResponse;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,9 +32,9 @@ public class BoardController {
     @PostMapping
     public JsonResponse<BoardResponse> save(
             @RequestBody @Valid BoardSaveRequest request,
-            HttpServletRequest req
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        BoardResponse boardResponse = service.save(request, req);
+        BoardResponse boardResponse = service.save(request, userDetails.getUser());
         return JsonResponse.success(boardResponse);
     }
 
@@ -43,18 +45,21 @@ public class BoardController {
     }
 
     @PutMapping("/{id}")
-    public JsonResponse<BoardResponse> update(@PathVariable("id") String id,
-                                              @RequestBody @Valid BoardSaveRequest req,
-                                              HttpServletRequest request
+    public JsonResponse<BoardResponse> update(
+            @PathVariable("id") String id,
+            @RequestBody @Valid BoardSaveRequest req,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        BoardResponse response = service.updateBoard(Long.parseLong(id), req, request);
+        BoardResponse response = service.updateBoard(Long.parseLong(id), req, userDetails.getUser());
         return JsonResponse.success(response);
     }
 
     @DeleteMapping("/{id}")
-    public JsonResponse<String> update(@PathVariable("id") String id,
-                                       HttpServletRequest req) {
-        String response = service.deleteBoard(Long.parseLong(id), req);
+    public JsonResponse<String> update(
+            @PathVariable("id") String id,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        String response = service.deleteBoard(Long.parseLong(id), userDetails.getUser());
         return JsonResponse.success(response);
     }
 

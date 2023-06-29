@@ -12,6 +12,7 @@ import com.hanhae.hanhae99.global.model.type.ErrorCode;
 import com.hanhae.hanhae99.global.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +22,9 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
-    private final JwtUtil jwtUtil;
 
     @Transactional
-    public CommentResponse saveComment(CommentRequest commentRequest, Long boardPid, HttpServletRequest req) {
+    public CommentResponse saveComment(CommentRequest commentRequest, Long boardPid, String username) {
         Board board = boardRepository.findById(boardPid).orElseThrow(() ->
         {
             throw new CustomException(ErrorCode.WRONG_BOARD_PID);
@@ -32,7 +32,7 @@ public class CommentService {
         Comment comment = commentRepository.save(Comment.getEntity(
                 commentRequest,
                 board,
-                jwtUtil.getTokenToUserName(req)));
+                username));
         return new CommentResponse(
                 comment.getName(),
                 comment.getContent(),
@@ -41,47 +41,39 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponse updateComment(CommentRequest commentRequest, Long commentPid, HttpServletRequest req) {
+    public CommentResponse updateComment(CommentRequest commentRequest, Long commentPid, UserDetails userDetails) {
         Comment comment = commentRepository.findById(commentPid).orElseThrow(() -> {
             throw new CustomException(ErrorCode.WRONG_COMMENT_PID);
         });
-        if (UserRoleEnum.ADMIN.toString().equals(jwtUtil.getTokenToRole(req))) {
-            comment.setContent(commentRequest.content());
-        } else {
-            if (checkToken(req, comment.getName())) {
-                throw new CustomException(ErrorCode.WRONG_NAME);
-            }
+        if(checkAuthority(comment, userDetails)){
             comment.setContent(commentRequest.content());
         }
+
         return new CommentResponse(comment.getName(), commentRequest.content(), Board.changeEntity(comment.getBoard()));
     }
 
     @Transactional
-    public String deleteComment(Long commentPid, HttpServletRequest req) {
+    public String deleteComment(Long commentPid,UserDetails userDetails) {
         Comment comment = commentRepository.findById(commentPid).orElseThrow(() -> {
             throw new CustomException(ErrorCode.WRONG_COMMENT_PID);
         });
 
-        if (UserRoleEnum.ADMIN.toString().equals(jwtUtil.getTokenToRole(req))) {
-            commentRepository.delete(comment);
-        } else {
-            if (checkToken(req, comment.getName())) {
-                throw new CustomException(ErrorCode.WRONG_NAME);
-            }
+        if (checkAuthority(comment,userDetails)) {
             commentRepository.delete(comment);
         }
+
         return "성공!";
     }
 
-    public boolean checkToken(HttpServletRequest req, String name) {
-        String tokenName = jwtUtil.getTokenToUserName(req);
-
-        if (tokenName.equals(name)) {
-            return false;
+    public boolean checkAuthority(Comment comment,UserDetails userDetails) {
+        if (UserRoleEnum.ADMIN.toString().equals(userDetails.getAuthorities())) {
+            return true;
+        } else {
+            if (!userDetails.getUsername().equals(comment.getName())) {
+                throw new CustomException(ErrorCode.WRONG_NAME);
+            }
         }
-
         return true;
     }
-
 
 }
