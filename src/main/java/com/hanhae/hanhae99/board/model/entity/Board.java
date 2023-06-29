@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @ToString
@@ -41,25 +42,31 @@ public class Board extends AuditingFields {
     private List<BoardHeart> boardHearts = new ArrayList<>();
 
     public static BoardResponse changeEntity(Board board) {
-        long board_size = 0 ;
-        if(board.getBoardHearts()==null){
-            board_size=0;
+
+        if(Objects.isNull(board.getComments())){
+            return new BoardResponse(board.getTitle(),
+                    board.getName(),
+                    board.getContent(),
+                    board.getCreatedAt().toString(),
+                    0,
+                    new ArrayList<>()
+            );
         }else{
-            board_size = board.getBoardHearts().size();
+            return new BoardResponse(board.getTitle(),
+                    board.getName(),
+                    board.getContent(),
+                    board.getCreatedAt().toString(),
+                    0,
+                    board.getComments().stream().map(a -> {
+                        return new CommentResponse(
+                                a.getName(),
+                                a.getContent(),
+                                a.getCommentHearts().size()
+                        );
+                    }).collect(Collectors.toList())
+            );
         }
-        return new BoardResponse(board.getTitle(),
-                board.getName(),
-                board.getContent(),
-                board.getCreatedAt().toString(),
-                board_size,
-                board.getComments().stream().map(a -> {
-                    return new CommentResponse(
-                            a.getName(),
-                            a.getContent(),
-                            a.getCommentHearts().size()
-                    );
-                }).collect(Collectors.toList())
-        );
+
     }
 
 
