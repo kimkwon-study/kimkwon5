@@ -37,6 +37,10 @@ public class Board extends AuditingFields {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany( mappedBy = "board", cascade = CascadeType.ALL)
+    private List<BoardHeart> boardHearts = new ArrayList<>();
+
     public static BoardResponse changeEntity(Board board) {
 
         if(Objects.isNull(board.getComments())){
@@ -44,6 +48,7 @@ public class Board extends AuditingFields {
                     board.getName(),
                     board.getContent(),
                     board.getCreatedAt().toString(),
+                    0,
                     new ArrayList<>()
             );
         }else{
@@ -51,6 +56,7 @@ public class Board extends AuditingFields {
                     board.getName(),
                     board.getContent(),
                     board.getCreatedAt().toString(),
+                    0,
                     board.getComments().stream().map(a -> {
                         return new CommentResponse(
                                 a.getName(),
@@ -60,6 +66,7 @@ public class Board extends AuditingFields {
                     }).collect(Collectors.toList())
             );
         }
+
     }
 
 
