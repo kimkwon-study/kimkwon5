@@ -27,7 +27,7 @@ public class BoardController {
         return JsonResponse.success(responseList);
     }
 
-    @PostMapping("/save")
+    @PostMapping
     public JsonResponse<BoardResponse> save(
             @RequestBody @Valid BoardSaveRequest request,
             HttpServletRequest req
@@ -42,7 +42,7 @@ public class BoardController {
         return JsonResponse.success(response);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public JsonResponse<BoardResponse> update(@PathVariable("id") String id,
                                               @RequestBody @Valid BoardSaveRequest req,
                                               HttpServletRequest request
@@ -51,7 +51,7 @@ public class BoardController {
         return JsonResponse.success(response);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public JsonResponse<String> update(@PathVariable("id") String id,
                                        HttpServletRequest req) {
         String response = service.deleteBoard(Long.parseLong(id), req);

@@ -32,7 +32,7 @@ public class CommentService {
         Comment comment = commentRepository.save(Comment.getEntity(
                 commentRequest,
                 board,
-                getTokenToUserName(req)));
+                jwtUtil.getTokenToUserName(req)));
         return new CommentResponse(
                 comment.getName(),
                 comment.getContent(),
@@ -45,7 +45,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentPid).orElseThrow(() -> {
             throw new CustomException(ErrorCode.WRONG_COMMENT_PID);
         });
-        if (UserRoleEnum.ADMIN.toString().equals(getTokenToRole(req))) {
+        if (UserRoleEnum.ADMIN.toString().equals(jwtUtil.getTokenToRole(req))) {
             comment.setContent(commentRequest.content());
         } else {
             if (checkToken(req, comment.getName())) {
@@ -62,7 +62,7 @@ public class CommentService {
             throw new CustomException(ErrorCode.WRONG_COMMENT_PID);
         });
 
-        if (UserRoleEnum.ADMIN.toString().equals(getTokenToRole(req))) {
+        if (UserRoleEnum.ADMIN.toString().equals(jwtUtil.getTokenToRole(req))) {
             commentRepository.delete(comment);
         } else {
             if (checkToken(req, comment.getName())) {
@@ -74,7 +74,7 @@ public class CommentService {
     }
 
     public boolean checkToken(HttpServletRequest req, String name) {
-        String tokenName = getTokenToUserName(req);
+        String tokenName = jwtUtil.getTokenToUserName(req);
 
         if (tokenName.equals(name)) {
             return false;
@@ -83,20 +83,5 @@ public class CommentService {
         return true;
     }
 
-    public String getTokenToUserName(HttpServletRequest req) {
-        String token = jwtUtil.getTokenFromRequest(req);
-        String userName = jwtUtil.getUserInfoFromToken(
-                jwtUtil.substringToken(token)
-        ).get("sub").toString();
-        return userName;
-    }
-
-    public String getTokenToRole(HttpServletRequest req) {
-        String token = jwtUtil.getTokenFromRequest(req);
-        String authority = jwtUtil.getUserInfoFromToken(
-                jwtUtil.substringToken(token)
-        ).get(jwtUtil.AUTHORIZATION_KEY).toString();
-        return authority;
-    }
 
 }

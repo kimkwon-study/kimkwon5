@@ -30,7 +30,7 @@ public class BoardService {
 
         Board board = repository.save(Board.builder()
                 .title(boarReq.title())
-                .name(getTokenToUserName(request))
+                .name(jwtUtil.getTokenToUserName(request))
                 .content(boarReq.content())
                 .build());
         return Board.changeEntity(board);
@@ -48,7 +48,6 @@ public class BoardService {
         Board board = repository.findById(id).orElseThrow(() ->
                 new CustomException(ErrorCode.NO_PID)
         );
-        System.out.println(board.getComments());
         return Board.changeEntity(board);
     }
 
@@ -57,12 +56,12 @@ public class BoardService {
         Board board = repository.findById(id).orElseThrow(() ->
                 new CustomException(ErrorCode.NO_PID)
         );
-        System.out.println(getTokenToRole(servletRequest));
-        if (UserRoleEnum.ADMIN.toString().equals(getTokenToRole(servletRequest))) {
+
+        if (UserRoleEnum.ADMIN.toString().equals(jwtUtil.getTokenToRole(servletRequest))) {
             board.setTitle(req.title());
             board.setContent(req.content());
         } else {
-            if (!(board.getName().equals(getTokenToUserName(servletRequest)))) {
+            if (!(board.getName().equals(jwtUtil.getTokenToUserName(servletRequest)))) {
                 //TODO 에러
                 throw new CustomException(ErrorCode.NO_PASSWORD);
             } else {
@@ -80,10 +79,10 @@ public class BoardService {
                 new CustomException(ErrorCode.NO_PID)
         );
 
-        if (UserRoleEnum.ADMIN.toString().equals(getTokenToRole(req))) {
+        if (UserRoleEnum.ADMIN.toString().equals(jwtUtil.getTokenToRole(req))) {
             repository.deleteById(id);
         } else {
-            if (!(board.getName().equals(getTokenToUserName(req)))) {
+            if (!(board.getName().equals(jwtUtil.getTokenToUserName(req)))) {
                 //TODO 에러
                 throw new CustomException(ErrorCode.NO_PASSWORD);
             } else {
@@ -93,21 +92,7 @@ public class BoardService {
         return "성공적으로 삭제되었습니다.";
     }
 
-    public String getTokenToUserName(HttpServletRequest req) {
-        String token = jwtUtil.getTokenFromRequest(req);
-        String userName = jwtUtil.getUserInfoFromToken(
-                jwtUtil.substringToken(token)
-        ).get("sub").toString();
-        return userName;
-    }
 
-    public String getTokenToRole(HttpServletRequest req) {
-        String token = jwtUtil.getTokenFromRequest(req);
-        String authority = jwtUtil.getUserInfoFromToken(
-                jwtUtil.substringToken(token)
-        ).get(jwtUtil.AUTHORIZATION_KEY).toString();
-        return authority;
-    }
 
 
 }

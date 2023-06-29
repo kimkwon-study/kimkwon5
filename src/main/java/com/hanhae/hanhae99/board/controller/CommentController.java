@@ -15,7 +15,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/save/{id}")
+    @PostMapping("/{id}")
     public JsonResponse<CommentResponse> save(@RequestBody CommentRequest commentRequest,
                                               @PathVariable("id") Long boardPid,
                                               HttpServletRequest req) {
@@ -23,7 +23,7 @@ public class CommentController {
         return JsonResponse.success(commentResponse);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public JsonResponse<CommentResponse> update(@RequestBody CommentRequest commentRequest,
                                                 @PathVariable("id") Long commentPid,
                                                 HttpServletRequest req) {
@@ -31,7 +31,7 @@ public class CommentController {
         return JsonResponse.success(commentResponse);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public JsonResponse<String> delete(@PathVariable("id") Long boardPid,
                                        HttpServletRequest req) {
         String commentResponse = commentService.deleteComment(boardPid, req);

@@ -121,4 +121,22 @@ public class JwtUtil {
         }
         return null;
     }
+
+    //Token 값에 유저 이름
+    public String getTokenToUserName(HttpServletRequest req) {
+        String token = getTokenFromRequest(req);
+        String userName = getUserInfoFromToken(
+                substringToken(token)
+        ).get("sub").toString();
+        return userName;
+    }
+    //Token의 권한
+    public String getTokenToRole(HttpServletRequest req) {
+        String token = getTokenFromRequest(req);
+        String authority = getUserInfoFromToken(
+                substringToken(token)
+        ).get(AUTHORIZATION_KEY).toString();
+        return authority;
+    }
+
 }
