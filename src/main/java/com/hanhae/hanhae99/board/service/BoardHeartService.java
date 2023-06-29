@@ -28,13 +28,12 @@ public class BoardHeartService {
         Optional<BoardHeart> boardHeart = boardHeartRepository.findByUsernameAndBoard(userDetails.getUsername(),board);
 
         if (boardHeart.isEmpty()) {
-            // 이미 좋아요 했다면 좋아요 취소
-            boardHeartRepository.delete(boardHeart.get());
-            return "좋아요가 취소 되었습니다. ";
-        } else {
             // 좋아요
             boardHeartRepository.save(new BoardHeart(userDetails.getUsername(), board));
             return "좋아요를 누르셨습니다. ";
+        } else {
+            boardHeartRepository.delete(boardHeart.get());
+            return "좋아요가 취소 되었습니다. ";
         }
     }
 

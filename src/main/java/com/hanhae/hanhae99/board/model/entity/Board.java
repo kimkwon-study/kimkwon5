@@ -63,7 +63,7 @@ public class Board extends AuditingFields {
                     board.getName(),
                     board.getContent(),
                     board.getCreatedAt().toString(),
-                    0,
+                    board_size,
                     board.getComments().stream().map(a -> {
                         return new CommentResponse(
                                 a.getName(),
@@ -76,22 +76,7 @@ public class Board extends AuditingFields {
 
     }
 
-//    public static BoardResponse changeEntity(Board board) {
-//
-//        return new BoardResponse(board.getTitle(),
-//                board.getName(),
-//                board.getContent(),
-//                board.getCreatedAt().toString(),
-//                board_size,
-//                board.getComments().stream().map(a -> {
-//                    return new CommentResponse(
-//                            a.getName(),
-//                            a.getContent(),
-//                            a.getCommentHearts().size()
-//                    );
-//                }).collect(Collectors.toList())
-//        );
-//    }
+
 
 
 }
