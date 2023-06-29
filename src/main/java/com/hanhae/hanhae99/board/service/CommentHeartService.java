@@ -26,7 +26,7 @@ public class CommentHeartService {
                 .orElseThrow(() ->{
                     throw new CustomException(ErrorCode.WRONG_COMMENT_PID);
                 });
-        Optional<CommentHeart> heart = commentHeartRepository.findByUsername(user.getUsername());
+        Optional<CommentHeart> heart = commentHeartRepository.findByUsernameAndComment(user.getUsername(), comment);
         if(heart.isEmpty()){
             commentHeartRepository.save(CommentHeart.builder()
                             .username(user.getUsername())
