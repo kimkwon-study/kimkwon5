@@ -1,12 +1,15 @@
 package com.hanhae.hanhae99.board.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hanhae.hanhae99.board.model.response.BoardResponse;
+import com.hanhae.hanhae99.board.model.response.CommentResponse;
 import com.hanhae.hanhae99.global.model.entity.AuditingFields;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ToString
 @Entity
@@ -29,7 +32,8 @@ public class Board extends AuditingFields {
     @Column
     private String content;
 
-    @OneToMany( mappedBy = "board", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     public static BoardResponse changeEntity(Board board) {
@@ -37,10 +41,15 @@ public class Board extends AuditingFields {
                 board.getName(),
                 board.getContent(),
                 board.getCreatedAt().toString(),
-                board.getComments()
+                board.getComments().stream().map(a -> {
+                    return new CommentResponse(
+                            a.getName(),
+                            a.getContent(),
+                            a.getCommentHearts().size()
+                    );
+                }).collect(Collectors.toList())
         );
     }
-
 
 
 }

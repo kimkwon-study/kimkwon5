@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -29,14 +31,15 @@ public class CommentService {
         {
             throw new CustomException(ErrorCode.WRONG_BOARD_PID);
         });
-        Comment comment = commentRepository.save(Comment.getEntity(
-                commentRequest,
-                board,
-                username));
+        Comment comment = commentRepository.save(Comment.builder()
+                .content(commentRequest.content())
+                .name(username)
+                .board(board)
+                .build());
         return new CommentResponse(
                 comment.getName(),
                 comment.getContent(),
-                Board.changeEntity(comment.getBoard())
+                comment.getCommentHearts().size()
         );
     }
 
@@ -45,27 +48,27 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentPid).orElseThrow(() -> {
             throw new CustomException(ErrorCode.WRONG_COMMENT_PID);
         });
-        if(checkAuthority(comment, userDetails)){
+        if (checkAuthority(comment, userDetails)) {
             comment.setContent(commentRequest.content());
         }
-
-        return new CommentResponse(comment.getName(), commentRequest.content(), Board.changeEntity(comment.getBoard()));
+        return new CommentResponse(comment.getName(), commentRequest.content(),
+                comment.getCommentHearts().size());
     }
 
     @Transactional
-    public String deleteComment(Long commentPid,UserDetails userDetails) {
+    public String deleteComment(Long commentPid, UserDetails userDetails) {
         Comment comment = commentRepository.findById(commentPid).orElseThrow(() -> {
             throw new CustomException(ErrorCode.WRONG_COMMENT_PID);
         });
 
-        if (checkAuthority(comment,userDetails)) {
+        if (checkAuthority(comment, userDetails)) {
             commentRepository.delete(comment);
         }
 
         return "성공!";
     }
 
-    public boolean checkAuthority(Comment comment,UserDetails userDetails) {
+    public boolean checkAuthority(Comment comment, UserDetails userDetails) {
         if (UserRoleEnum.ADMIN.toString().equals(userDetails.getAuthorities())) {
             return true;
         } else {
@@ -75,5 +78,6 @@ public class CommentService {
         }
         return true;
     }
+
 
 }

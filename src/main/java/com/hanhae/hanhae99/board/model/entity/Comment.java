@@ -2,9 +2,13 @@ package com.hanhae.hanhae99.board.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hanhae.hanhae99.board.model.request.CommentRequest;
+import com.hanhae.hanhae99.board.model.response.CommentResponse;
 import com.hanhae.hanhae99.global.model.entity.AuditingFields;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,17 +33,11 @@ public class Comment extends AuditingFields {
     @JoinColumn(name = "board_pid")
     private Board board;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentHeart> commentHearts = new ArrayList<>();
+
     protected Comment() {
-    }
-
-    private Comment(String content, Board board, String name) {
-        this.content = content;
-        this.board = board;
-        this.name = name;
-    }
-
-    public static Comment getEntity(CommentRequest request, Board board, String name){
-        return new Comment(request.content(), board, name);
     }
 
 }

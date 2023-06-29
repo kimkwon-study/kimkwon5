@@ -9,6 +9,6 @@ public record BoardResponse(
         String name,
         String content,
         String createdAt,
-        List<Comment> comments
+        List<CommentResponse> comments
 ) {
 }
