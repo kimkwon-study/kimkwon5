@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -36,11 +37,19 @@ public class CommentService {
                 .name(username)
                 .board(board)
                 .build());
-        return new CommentResponse(
-                comment.getName(),
-                comment.getContent(),
-                comment.getCommentHearts().size()
-        );
+        if(Objects.isNull(comment.getCommentHearts())){
+            return new CommentResponse(
+                    comment.getName(),
+                    comment.getContent(),
+                    0
+            );
+        }else{
+            return new CommentResponse(
+                    comment.getName(),
+                    comment.getContent(),
+                    comment.getCommentHearts().size()
+            );
+        }
     }
 
     @Transactional

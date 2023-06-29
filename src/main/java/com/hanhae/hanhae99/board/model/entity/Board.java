@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @ToString
@@ -37,18 +38,28 @@ public class Board extends AuditingFields {
     private List<Comment> comments = new ArrayList<>();
 
     public static BoardResponse changeEntity(Board board) {
-        return new BoardResponse(board.getTitle(),
-                board.getName(),
-                board.getContent(),
-                board.getCreatedAt().toString(),
-                board.getComments().stream().map(a -> {
-                    return new CommentResponse(
-                            a.getName(),
-                            a.getContent(),
-                            a.getCommentHearts().size()
-                    );
-                }).collect(Collectors.toList())
-        );
+
+        if(Objects.isNull(board.getComments())){
+            return new BoardResponse(board.getTitle(),
+                    board.getName(),
+                    board.getContent(),
+                    board.getCreatedAt().toString(),
+                    new ArrayList<>()
+            );
+        }else{
+            return new BoardResponse(board.getTitle(),
+                    board.getName(),
+                    board.getContent(),
+                    board.getCreatedAt().toString(),
+                    board.getComments().stream().map(a -> {
+                        return new CommentResponse(
+                                a.getName(),
+                                a.getContent(),
+                                a.getCommentHearts().size()
+                        );
+                    }).collect(Collectors.toList())
+            );
+        }
     }
 
 
