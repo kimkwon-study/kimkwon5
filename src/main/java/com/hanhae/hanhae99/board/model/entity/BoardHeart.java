@@ -17,8 +17,7 @@ public class BoardHeart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pid;
 
-    @Column
-    private Boolean heart;
+
 
     @Column
     private String username;
@@ -27,8 +26,8 @@ public class BoardHeart {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public BoardHeart(Boolean heart, String username, Board board) {
-        this.heart = heart;
+    public BoardHeart( String username, Board board) {
+
         this.username = username;
         this.board = board;
     }

@@ -1,11 +1,10 @@
 package com.hanhae.hanhae99.board.controller;
 
-import com.hanhae.hanhae99.board.service.HeartService;
+import com.hanhae.hanhae99.board.service.BoardHeartService;
 import com.hanhae.hanhae99.certification.model.UserDetailsImpl;
 import com.hanhae.hanhae99.global.model.response.JsonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/heart")
 public class HeartController {
 
-    private final HeartService heartService;
+    private final BoardHeartService heartService;
 
     @PostMapping("/board/{id}")
     public JsonResponse<String> clickHeart(
