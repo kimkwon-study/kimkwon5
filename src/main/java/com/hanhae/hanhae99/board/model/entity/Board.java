@@ -32,6 +32,9 @@ public class Board extends AuditingFields {
     @OneToMany( mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany( mappedBy = "board", cascade = CascadeType.ALL)
+    private List<BoardHeart> boardHearts = new ArrayList<>();
+
     public static BoardResponse changeEntity(Board board) {
         return new BoardResponse(board.getTitle(),
                 board.getName(),
