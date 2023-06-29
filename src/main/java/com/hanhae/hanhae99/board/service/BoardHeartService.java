@@ -25,7 +25,7 @@ public class BoardHeartService {
                 new CustomException(ErrorCode.NO_PID)
         );
 
-        Optional<BoardHeart> boardHeart = boardHeartRepository.findByUsername(userDetails.getUsername());
+        Optional<BoardHeart> boardHeart = boardHeartRepository.findByUsernameAndBoard(userDetails.getUsername(),board);
 
         if (boardHeart.isEmpty()) {
             // 이미 좋아요 했다면 좋아요 취소
